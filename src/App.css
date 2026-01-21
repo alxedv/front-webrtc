@@ -1,0 +1,176 @@
+/* App.css - Estilo "Dark Mode" Moderno */
+:root {
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --primary-color: #8ab4f8;
+  /* Azul Google Meet */
+  --danger-color: #ff4d4d;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  /* Remove barras de rolagem */
+}
+
+.meet-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  ;
+  position: relative;
+}
+
+/* --- Área de Vídeo --- */
+.video-stage {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+}
+
+/* O Vídeo do AMIGO (Grande) */
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Garante que o vídeo não corte */
+}
+
+/* O MEU Vídeo (Pequeno - Picture in Picture) */
+.local-video-wrapper {
+  position: absolute;
+  bottom: 100px;
+  right: 20px;
+  width: 200px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: #222;
+  transition: all 0.3s ease;
+}
+
+.local-video-wrapper:hover {
+  transform: scale(1.05);
+  /* Efeito de zoom ao passar o mouse */
+}
+
+.local-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  font-size: 12px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+/* --- Barra de Controle --- */
+.controls-bar {
+  height: 80px;
+  background-color: var(--surface-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 0 20px;
+}
+
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #3c4043;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.control-btn:hover {
+  background-color: #505559;
+}
+
+.control-btn.end-call {
+  background-color: var(--danger-color);
+  width: 60px;
+  /* Botão de desligar um pouco maior */
+}
+
+/* --- Painel de Conexão (Overlay) --- */
+.connection-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--surface-color);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 320px;
+  z-index: 100;
+}
+
+.panel-title {
+  margin: 0 0 20px 0;
+  font-weight: 500;
+}
+
+.id-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 8px;
+  font-family: monospace;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+  border: 1px dashed var(--primary-color);
+  cursor: pointer;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-field {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #121212;
+  color: white;
+  font-size: 14px;
+}
+
+.connect-btn {
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: var(--primary-color);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
