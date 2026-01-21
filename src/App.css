@@ -1,29 +1,36 @@
-/* App.css - Estilo "Dark Mode" Moderno */
+/* App.css - Mobile Optimized */
 :root {
   --bg-color: #121212;
   --surface-color: #1e1e1e;
   --primary-color: #8ab4f8;
-  /* Azul Google Meet */
   --danger-color: #ff4d4d;
   --text-primary: #ffffff;
-  --text-secondary: #aaaaaa;
+  /* Altura dinâmica para corrigir bug da barra de navegação mobile */
+  --app-height: 100dvh;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  /* Remove highlight azul no toque */
 }
 
 body {
   margin: 0;
   background-color: var(--bg-color);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Inter', sans-serif;
   overflow: hidden;
-  /* Remove barras de rolagem */
+  position: fixed;
+  /* Trava o scroll elástico do iOS */
+  width: 100%;
 }
 
 .meet-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: var(--app-height);
   width: 100vw;
-  ;
   position: relative;
 }
 
@@ -31,146 +38,178 @@ body {
 .video-stage {
   flex: 1;
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background: #000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* O Vídeo do AMIGO (Grande) */
 .remote-video {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  /* Garante que o vídeo não corte */
+  /* No celular, 'cover' é melhor para preencher a tela toda (estilo TikTok/Insta) */
+  /* Se preferir ver o video inteiro sem cortes, mude para 'contain' */
+  object-fit: cover;
 }
 
-/* O MEU Vídeo (Pequeno - Picture in Picture) */
+/* --- PiP (Vídeo Local) --- */
 .local-video-wrapper {
   position: absolute;
+  /* Responsivo: 25% da largura da tela, mas nunca menor que 100px */
+  width: 25vw;
+  min-width: 100px;
+  max-width: 180px;
+  /* Proporção 3:4 (retrato) ou 4:3 */
+  aspect-ratio: 3/4;
+
   bottom: 100px;
-  right: 20px;
-  width: 200px;
-  height: 150px;
+  /* Acima da barra de controle */
+  right: 16px;
+
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   background: #222;
+  z-index: 10;
   transition: all 0.3s ease;
-}
-
-.local-video-wrapper:hover {
-  transform: scale(1.05);
-  /* Efeito de zoom ao passar o mouse */
 }
 
 .local-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scaleX(-1);
+  /* Espelhar a câmera frontal como um espelho */
 }
 
 .user-label {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  font-size: 12px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 4px 8px;
-  border-radius: 4px;
-  pointer-events: none;
+  display: none;
+  /* No mobile geralmente escondemos labels pra limpar a tela */
 }
 
-/* --- Barra de Controle --- */
+/* --- Barra de Controles (Flutuante no Mobile) --- */
 .controls-bar {
-  height: 80px;
-  background-color: var(--surface-color);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 90px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  padding: 0 20px;
+  gap: 20px;
+  padding-bottom: 20px;
+  /* Espaço para a barra home do iPhone */
+  z-index: 20;
 }
 
 .control-btn {
-  width: 50px;
-  height: 50px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: none;
-  background-color: #3c4043;
+  background-color: rgba(60, 64, 67, 0.8);
+  backdrop-filter: blur(5px);
   color: white;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: transform 0.1s;
 }
 
-.control-btn:hover {
-  background-color: #505559;
+.control-btn:active {
+  transform: scale(0.9);
 }
 
 .control-btn.end-call {
   background-color: var(--danger-color);
-  width: 60px;
-  /* Botão de desligar um pouco maior */
 }
 
-/* --- Painel de Conexão (Overlay) --- */
+/* --- Painel de Conexão (Modal) --- */
 .connection-panel {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--surface-color);
-  padding: 30px;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  background: #1e1e1e;
+  padding: 24px;
+  border-radius: 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
   text-align: center;
-  width: 320px;
+
+  /* Largura segura para mobile */
+  width: 90%;
+  max-width: 360px;
   z-index: 100;
 }
 
 .panel-title {
-  margin: 0 0 20px 0;
-  font-weight: 500;
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .id-box {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 10px;
-  border-radius: 8px;
+  background: rgba(138, 180, 248, 0.1);
+  padding: 12px;
+  border-radius: 12px;
   font-family: monospace;
+  font-size: 1.1rem;
   margin-bottom: 20px;
   color: var(--primary-color);
   border: 1px dashed var(--primary-color);
   cursor: pointer;
+  word-break: break-all;
+  /* Evita que ID longo quebre o layout */
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .input-field {
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 12px;
   border: 1px solid #444;
-  background: #121212;
+  background: #2c2c2c;
   color: white;
-  font-size: 14px;
+  /* 16px evita zoom automático no iOS */
+  font-size: 16px;
+  outline: none;
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
 }
 
 .connect-btn {
-  padding: 12px;
-  border-radius: 8px;
+  padding: 16px;
+  border-radius: 12px;
   border: none;
   background: var(--primary-color);
   color: #000;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 16px;
   cursor: pointer;
-  font-size: 14px;
+}
+
+/* Ajustes finos para telas muito pequenas */
+@media (max-width: 380px) {
+  .local-video-wrapper {
+    width: 30vw;
+    bottom: 100px;
+  }
+
+  .control-btn {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
 }
