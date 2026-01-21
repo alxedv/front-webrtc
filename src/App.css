@@ -1,79 +1,126 @@
-/* App.css - Mobile Optimized */
+/* App.css - Mobile Native Feel */
 :root {
   --bg-color: #121212;
-  --surface-color: #1e1e1e;
   --primary-color: #8ab4f8;
-  --danger-color: #ff4d4d;
   --text-primary: #ffffff;
-  /* Altura dinâmica para corrigir bug da barra de navegação mobile */
-  --app-height: 100dvh;
 }
 
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  /* Remove highlight azul no toque */
 }
 
-body {
+body,
+html {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
   background-color: var(--bg-color);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   overflow: hidden;
-  position: fixed;
-  /* Trava o scroll elástico do iOS */
-  width: 100%;
+  /* Proíbe qualquer scroll na página inteira */
 }
 
+/* O CONTAINER PRINCIPAL */
 .meet-container {
+  /* O Pulo do Gato: Fixar nas bordas em vez de usar height */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
   display: flex;
   flex-direction: column;
-  height: var(--app-height);
-  width: 100vw;
-  position: relative;
+  /* Organiza itens um embaixo do outro */
+  background: black;
+  z-index: 1;
 }
 
-/* --- Área de Vídeo --- */
+/* --- 1. PALCO DE VÍDEO (Espaço Flexível) --- */
 .video-stage {
+  /* Ocupa todo o espaço DISPONÍVEL, empurrando a barra de controles pra baixo */
   flex: 1;
+
+  /* Importante para Flexbox não estourar o tamanho */
+  min-height: 0;
+
   position: relative;
   background: #000;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .remote-video {
   width: 100%;
   height: 100%;
-  /* No celular, 'cover' é melhor para preencher a tela toda (estilo TikTok/Insta) */
-  /* Se preferir ver o video inteiro sem cortes, mude para 'contain' */
-  object-fit: cover;
+  object-fit: contain;
+  /* Garante que você veja o vídeo todo sem cortes */
+  /* Se quiser preencher a tela toda (estilo TikTok), mude para 'cover' */
+}
+
+/* --- 2. BARRA DE CONTROLES (Tamanho Fixo) --- */
+.controls-bar {
+  /* Altura fixa para os controles */
+  height: 80px;
+
+  /* Não deixa o Flexbox esmagar a barra se a tela for muito pequena */
+  flex-shrink: 0;
+
+  background: #1e1e1e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  /* Respeita a área segura do iPhone (o 'notch' de baixo) */
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+  z-index: 10;
+}
+
+.control-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background-color: #3c4043;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn.end-call {
+  background-color: #ff4d4d;
+  width: 60px;
+  /* Destaque para o botão de desligar */
 }
 
 /* --- PiP (Vídeo Local) --- */
 .local-video-wrapper {
   position: absolute;
-  /* Responsivo: 25% da largura da tela, mas nunca menor que 100px */
-  width: 25vw;
-  min-width: 100px;
-  max-width: 180px;
-  /* Proporção 3:4 (retrato) ou 4:3 */
-  aspect-ratio: 3/4;
-
-  bottom: 100px;
-  /* Acima da barra de controle */
+  bottom: 20px;
+  /* Fica acima da barra de controles */
   right: 16px;
+
+  width: 25vw;
+  /* Dinâmico: 25% da largura da tela */
+  min-width: 90px;
+  max-width: 160px;
+  aspect-ratio: 3/4;
 
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   background: #222;
-  z-index: 10;
-  transition: all 0.3s ease;
+  z-index: 5;
 }
 
 .local-video {
@@ -81,160 +128,73 @@ body {
   height: 100%;
   object-fit: cover;
   transform: scaleX(-1);
-  /* Espelhar a câmera frontal como um espelho */
 }
 
-.user-label {
-  display: none;
-  /* No mobile geralmente escondemos labels pra limpar a tela */
-}
-
-/* --- Barra de Controles (Flutuante no Mobile) --- */
-.controls-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 90px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  padding-bottom: 20px;
-  /* Espaço para a barra home do iPhone */
-  z-index: 20;
-}
-
-.control-btn {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  border: none;
-  background-color: rgba(60, 64, 67, 0.8);
-  backdrop-filter: blur(5px);
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.1s;
-}
-
-.control-btn:active {
-  transform: scale(0.9);
-}
-
-.control-btn.end-call {
-  background-color: var(--danger-color);
-}
-
-/* --- Painel de Conexão (Modal) --- */
+/* --- Painel de Conexão (Overlay Fullscreen no Mobile) --- */
 .connection-panel {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+
   background: rgba(30, 30, 30, 0.95);
-  /* Um pouco mais escuro/sólido */
+  backdrop-filter: blur(10px);
   padding: 24px;
-  border-radius: 24px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  border-radius: 20px;
   text-align: center;
   width: 90%;
-  max-width: 360px;
-
-  /* AUMENTAR O Z-INDEX PARA FICAR ACIMA DE TUDO */
-  z-index: 2000;
-  backdrop-filter: blur(10px);
-  /* Efeito de vidro */
-}
-
-.panel-title {
-  margin: 0 0 16px 0;
-  font-size: 1.2rem;
-  font-weight: 600;
+  max-width: 350px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .id-box {
   background: rgba(138, 180, 248, 0.1);
-  padding: 12px;
-  border-radius: 12px;
+  padding: 15px;
+  border-radius: 10px;
+  color: var(--primary-color);
   font-family: monospace;
   font-size: 1.1rem;
-  margin-bottom: 20px;
-  color: var(--primary-color);
-  border: 1px dashed var(--primary-color);
-  cursor: pointer;
   word-break: break-all;
-  /* Evita que ID longo quebre o layout */
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .input-field {
-  padding: 16px;
-  border-radius: 12px;
-  border: 1px solid #444;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #555;
   background: #2c2c2c;
   color: white;
-  /* 16px evita zoom automático no iOS */
   font-size: 16px;
-  outline: none;
-}
-
-.input-field:focus {
-  border-color: var(--primary-color);
+  /* Evita zoom no iPhone */
+  width: 100%;
 }
 
 .connect-btn {
-  padding: 16px;
-  border-radius: 12px;
+  padding: 15px;
+  border-radius: 10px;
   border: none;
   background: var(--primary-color);
-  color: #000;
-  font-weight: 700;
+  font-weight: bold;
   font-size: 16px;
-  cursor: pointer;
+  color: #000;
 }
 
-/* Ajustes finos para telas muito pequenas */
-@media (max-width: 380px) {
-  .local-video-wrapper {
-    width: 30vw;
-    bottom: 100px;
-  }
-
-  .control-btn {
-    width: 48px;
-    height: 48px;
-    font-size: 20px;
-  }
-}
-
+/* --- AJUSTE CRÍTICO PARA MOBILE --- */
 @media (max-width: 600px) {
+
+  /* No celular, se o teclado abrir, o painel sobe para não sumir */
   .connection-panel {
-    /* No celular, o painel ocupa a tela toda para evitar bugs de teclado */
-    width: 100%;
-    height: 100%;
     top: 0;
     left: 0;
     transform: none;
+    width: 100%;
+    height: 100%;
     border-radius: 0;
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     background: #121212;
-    /* Fundo sólido no mobile */
   }
 
-  .controls-bar {
-    /* Esconde a barra de botões se o painel de conexão estiver aberto */
-    z-index: 10;
+  /* Se o painel de conexão estiver aberto, escondemos os controles de trás */
+  .meet-container:has(.connection-panel) .controls-bar {
+    display: none;
   }
 }
